@@ -1,5 +1,7 @@
-package jmbd.ds1302;
+package jmbd.gpio.ds1302;
 
+import jmbd.commons.BinaryCodedDecimalFormat;
+import jmbd.commons.TimeDelay;
 import java.io.IOException;
 import java.util.Calendar;
 import javax.microedition.midlet.MIDlet;

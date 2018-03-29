@@ -1,4 +1,4 @@
-package jmbd.ds1302;
+package jmbd.commons;
 
 public class TimeDelay {
 

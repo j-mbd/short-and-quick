@@ -1,4 +1,4 @@
-package jmbd.ds1302;
+package jmbd.gpio.ds1302;
 
 public class DS1302Command {
 

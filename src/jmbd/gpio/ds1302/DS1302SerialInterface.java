@@ -1,11 +1,12 @@
-package jmbd.ds1302;
+package jmbd.gpio.ds1302;
 
+import jmbd.commons.TimeDelay;
 import java.io.IOException;
 import jdk.dio.gpio.GPIOPin;
 import jdk.dio.gpio.GPIOPinConfig;
 
 /**
- * TODO: Assertions for clocked-in/clocked-out data.
+ *
  *
  */
 public class DS1302SerialInterface {
@@ -107,7 +108,7 @@ public class DS1302SerialInterface {
      *
      * ENSURES:
      *
-     * 1) Data clocked-in 2) Clock/data pins not closed.
+     * 1) Clock/data pins not closed.
      *
      * @param data
      */
@@ -142,7 +143,7 @@ public class DS1302SerialInterface {
      *
      * ENSURES:
      *
-     * 1) Data clocked-out 2) Clock/data pins not closed.
+     * 1) Clock/data pins not closed.
      *
      * @return
      */
