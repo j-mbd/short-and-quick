@@ -49,7 +49,7 @@ public class FourDigitDisplay extends CommonOperationsMIDlet {
     private GPIOPin latchPin;
     private GPIOPin clockPin;
 
-    private OrderConfigurableShiftRegister shiftRegister;
+    private ShiftRegister shiftRegister;
 
     private TimeDelay timeDelay;
 
@@ -119,18 +119,19 @@ public class FourDigitDisplay extends CommonOperationsMIDlet {
         timeDelay.pauseMillis(200);
     }
 
-    private OrderConfigurableShiftRegister shiftRegister() {
+    private ShiftRegister shiftRegister() {
 
+        // Can be controlled by app prop
         // OrderConfigurableShiftRegister sr = new ArrayOrderConfigurableShiftRegister();
-        OrderConfigurableShiftRegister sr = new DequeOrderConfigurableShiftRegister();
+        OrderConfigurableShiftRegister ocsr = new DequeOrderConfigurableShiftRegister();
 
-        sr.setDataPin(dataPin);
-        sr.setLatchPin(latchPin);
-        sr.setClockPin(clockPin);
-        sr.maxLoadBits(SHIFT_REGISTER_SIZE);
-        sr.makeNaturalOrder();
+        ocsr.setDataPin(dataPin);
+        ocsr.setLatchPin(latchPin);
+        ocsr.setClockPin(clockPin);
+        ocsr.maxLoadBits(SHIFT_REGISTER_SIZE);
+        ocsr.makeNaturalOrder();
 
-        return sr;
+        return ocsr;
     }
 
     private GPIOPin outPin(int pNum) throws IOException {
