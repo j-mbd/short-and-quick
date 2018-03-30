@@ -21,7 +21,7 @@ import java.util.Deque;
  */
 public class DequeOrderConfigurableShiftRegister extends OrderConfigurableShiftRegister {
 
-    private Deque<Boolean> buffer;
+    private Deque<Boolean> buffer = new ArrayDeque(DEFAULT_MAX_LOAD_BITS);
 
     @Override
     public void maxLoadBits(int maxShiftInBits) {

@@ -28,7 +28,7 @@ import jdk.dio.gpio.GPIOPinConfig;
  */
 public class ShiftRegister {
 
-    private static final int DEFAULT_MAX_LOAD_BITS = 8;
+    protected static final int DEFAULT_MAX_LOAD_BITS = 8;
 
     protected GPIOPin dataPin;
     private GPIOPin latchPin;

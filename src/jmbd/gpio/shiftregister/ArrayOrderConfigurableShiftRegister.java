@@ -22,7 +22,7 @@ package jmbd.gpio.shiftregister;
  */
 public class ArrayOrderConfigurableShiftRegister extends OrderConfigurableShiftRegister {
 
-    private boolean[] buffer;
+    private boolean[] buffer = new boolean[DEFAULT_MAX_LOAD_BITS];
 
     private int bufferPos;
 
