@@ -10,10 +10,22 @@ import jmbd.commons.CommonOperationsMIDlet;
 import jmbd.commons.TimeDelay;
 
 /**
+ * THIS SOFTWARE IS PROVIDED BY Savvas Moysidis “AS IS” AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL Savvas Moysidis BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
  * Drives a four-digit, seven-segment LED display with the use of two
  * shift-registers joined together in a cascading fashion.
  *
- * Tested by means of a four-digit display emulation. Output of first
+ * Tested by means of a "four-digit display" emulation. Output of first
  * shift-register was wired to a seven-digit display whilst the four LSBs of the
  * second shift-register were connected to four LEDs indicating which digit the
  * display is showing at any given time. (A poor man's four-digit display
@@ -49,7 +61,7 @@ public class FourDigitDisplay extends CommonOperationsMIDlet {
             latchPin = outPin(LATCH_PIN_NUM);
             clockPin = outPin(CLOCK_PIN_NUM);
 
-            shiftRegister = shiftRegisterInterface();
+            shiftRegister = shiftRegister();
 
             timeDelay = new TimeDelay();
 
@@ -64,7 +76,9 @@ public class FourDigitDisplay extends CommonOperationsMIDlet {
     // REQUIRES: (num >= 0) & (num <= 9999)
     private void showNumber(short num) {
 
-        System.out.println("Showing number: " + num);
+        assert num >= 0 && num <= 9999 : "Number " + num + " is outside the expected range [0 - 9999]";
+
+        System.out.println("Displaying number: " + num);
         String asString = padIfLengthNotRight(String.valueOf(num), 4);
 
         for (short i = 3; i >= 0; i--) {
@@ -105,7 +119,7 @@ public class FourDigitDisplay extends CommonOperationsMIDlet {
         timeDelay.pauseMillis(200);
     }
 
-    private OrderConfigurableShiftRegister shiftRegisterInterface() {
+    private OrderConfigurableShiftRegister shiftRegister() {
 
         // OrderConfigurableShiftRegister sr = new ArrayOrderConfigurableShiftRegister();
         OrderConfigurableShiftRegister sr = new DequeOrderConfigurableShiftRegister();
@@ -137,8 +151,8 @@ public class FourDigitDisplay extends CommonOperationsMIDlet {
     }
 
     /**
-     * Mappings of numbers to bit-patterns that the shift-register needs to be
-     * loaded with in order to display a number on a seven segment display.
+     * Mappings of numbers to bit-patterns the shift-register needs to be loaded
+     * with in order to display a number on a seven segment display.
      *
      * @return
      */
