@@ -3,6 +3,17 @@ package jmbd.i2c.blinkm.colour;
 import jmbd.i2c.blinkm.command.BlinkMCommandExecution;
 
 /**
+ * THIS SOFTWARE IS PROVIDED BY Savvas Moysidis “AS IS” AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL Savvas Moysidis BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  * INVARIANTS:
  *
  * 1) H,S,B values between [0 TO 255]
@@ -136,7 +147,7 @@ public class HsbBlinkMColour extends BlinkMColour {
 
     /**
      * Gradually updates the device with the currently set h,s,b values at a
- rate determined by the currently configured "fadeApply speed".
+     * rate determined by the currently configured "fadeApply speed".
      *
      * A hue (h) is the raw colour. Saturation (s) is the vividness of the
      * colour. A saturation of 0 means a very light/white colour and a
@@ -164,11 +175,11 @@ public class HsbBlinkMColour extends BlinkMColour {
      * currently configured "randomness" H,S,B values.
      *
      * (A value of "0" results in no change at all)
-
- REQUIRES:
-
- Device configured with a hue (i.e. hueSet() == true) by means of calling
- the fadeApply() method.
+     *
+     * REQUIRES:
+     *
+     * Device configured with a hue (i.e. hueSet() == true) by means of calling
+     * the fadeApply() method.
      *
      */
     @Override

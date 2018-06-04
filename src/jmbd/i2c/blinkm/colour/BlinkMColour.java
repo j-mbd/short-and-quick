@@ -3,6 +3,18 @@ package jmbd.i2c.blinkm.colour;
 import jmbd.i2c.blinkm.command.BlinkMCommandExecution;
 
 /**
+ * THIS SOFTWARE IS PROVIDED BY Savvas Moysidis “AS IS” AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL Savvas Moysidis BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
  * INVARIANTS:
  *
  * 1) Quantity values for A,B,C between [0 TO 255]
@@ -10,7 +22,7 @@ import jmbd.i2c.blinkm.command.BlinkMCommandExecution;
  * 2) Quantity value randomness for A,B,C between [0 TO 255]
  *
  * (Used in an "implementation-inheritance" mode. Abstraction-anchoring must be
- * done in subclasses)
+ * done in subclasses, hence package-scoped)
  *
  * @author savvas
  */
