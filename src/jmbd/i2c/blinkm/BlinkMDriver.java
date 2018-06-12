@@ -44,7 +44,8 @@ import jdk.dio.i2cbus.I2CDeviceConfig;
  * telneting into the port works but the startApp() method isn't invoked when
  * data is sent through). It only seems to work if "ams-install"-ed manually..
  *
- * The following are the Push Registry related entries required in jad:
+ * The following are the Push Registry related entries required in jad (don't
+ * forget to change the port number to whatever number you prefer):
  *
  * MIDlet-Permission-3: javax.microedition.io.PushRegistryPermission "socket:"
  * "static"
@@ -64,8 +65,8 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
 
     private I2CDevice blinkMHandle;
 
-    private RgbBlinkMVisualEffect rgbColour;
-    private HsbBlinkMVisualEffect hsbColour;
+    private RgbBlinkMVisualEffect rgbBlinkMVisualEffect;
+    private HsbBlinkMVisualEffect hsbBlinkMVisualEffect;
     private BlinkMBuiltInScript buildInScript;
     private BlinkMCustomScript customScript;
     private BlinkMDeviceAdministration blinkMDeviceAdministration;
@@ -80,15 +81,15 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
             blinkMHandle = blinkMHandle();
             BlinkMCommandExecution commandExecution = new BlinkMCommandExecution(blinkMHandle);
 
-            rgbColour = new RgbBlinkMVisualEffect(commandExecution);
-            hsbColour = new HsbBlinkMVisualEffect(commandExecution);
+            rgbBlinkMVisualEffect = new RgbBlinkMVisualEffect(commandExecution);
+            hsbBlinkMVisualEffect = new HsbBlinkMVisualEffect(commandExecution);
             buildInScript = new BlinkMBuiltInScript(commandExecution);
             customScript = new BlinkMCustomScript(commandExecution);
             blinkMDeviceAdministration = new BlinkMDeviceAdministration(commandExecution);
 
             timeDelay = new TimeDelay();
 
-            codeTransmission = new BlinkMMorseCodeTransmission(rgbColour);
+            codeTransmission = new BlinkMMorseCodeTransmission(rgbBlinkMVisualEffect);
             codeTransmission.setTimeUnitDuration(300);
             codeTransmission.setTimeDelay(timeDelay);
 
@@ -115,7 +116,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
 
             for (String s : pendingConnections) {
 
-                rgbColour.goDark();
+                rgbBlinkMVisualEffect.goBlack();
 
                 System.out.println("Attemping to open connection: " + s);
 
@@ -155,7 +156,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
     private void readScript(short id) {
 
         // black-out
-        rgbColour.makeBlack();
+        rgbBlinkMVisualEffect.makeBlack();
 
         buildInScript.setId(id);
         buildInScript.setLineNumber(Short.valueOf("2"));
@@ -165,7 +166,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
         BlinkMCommandExecution commandExecution = new BlinkMCommandExecution(blinkMHandle);
 
         for (int i = 0; i < 10; i++) {
-            rgbColour.fadeApply();
+            rgbBlinkMVisualEffect.fadeApply();
             timeDelay.pauseMillis(5_000);
             commandExecution.runWithNoReturnValue(scriptLine.getCommand());
         }
@@ -184,14 +185,14 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
             System.out.println("Target R,G,B:  " + targetR + ", " + targetG + ", " + targetB);
 
             // set random colour...
-            rgbColour.setR(targetR);
-            rgbColour.setG(targetG);
-            rgbColour.setB(targetB);
-            rgbColour.apply();
+            rgbBlinkMVisualEffect.setR(targetR);
+            rgbBlinkMVisualEffect.setG(targetG);
+            rgbBlinkMVisualEffect.setB(targetB);
+            rgbBlinkMVisualEffect.apply();
 
             timeDelay.pauseMillis(5_000);
 
-            RgbBlinkMVisualEffect currentDeviceColour = rgbColour.getCurrentDeviceColour();
+            RgbBlinkMVisualEffect currentDeviceColour = rgbBlinkMVisualEffect.getCurrentDeviceColour();
             System.out.println(currentDeviceColour);
 
             timeDelay.pauseMillis(5_000);
@@ -211,10 +212,10 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
             System.out.println("Target H,S,B:  " + targetH + ", " + targetS + ", " + targetB);
 
             // set random hsb colour...
-            hsbColour.setH(targetH);
-            hsbColour.setS(targetS);
-            hsbColour.setB(targetB);
-            hsbColour.fadeApply();
+            hsbBlinkMVisualEffect.setH(targetH);
+            hsbBlinkMVisualEffect.setS(targetS);
+            hsbBlinkMVisualEffect.setB(targetB);
+            hsbBlinkMVisualEffect.fadeApply();
 
             timeDelay.pauseMillis(1_000);
         }
@@ -223,8 +224,8 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
     private void playScript(short scriptId) {
 
         // fadeApply to black(i.e. switch off..)
-        rgbColour.makeBlack();
-        rgbColour.fadeApply();
+        rgbBlinkMVisualEffect.makeBlack();
+        rgbBlinkMVisualEffect.fadeApply();
 
         timeDelay.pauseMillis(3_000);
 

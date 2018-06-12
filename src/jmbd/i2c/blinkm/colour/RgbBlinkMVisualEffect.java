@@ -238,12 +238,22 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
     }
 
     /**
-     * Switches-off colour.
+     * Switches-off all colour.
      *
      */
-    public void goDark() {
+    public void goBlack() {
 
         makeBlack();
+        apply();
+    }
+
+    /**
+     * Switches-on white colour.
+     *
+     */
+    public void goWhite() {
+
+        makeWhite();
         apply();
     }
 

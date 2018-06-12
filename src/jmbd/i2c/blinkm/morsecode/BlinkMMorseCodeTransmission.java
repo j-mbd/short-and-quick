@@ -18,24 +18,22 @@ import jmbd.i2c.blinkm.colour.RgbBlinkMVisualEffect;
  */
 public class BlinkMMorseCodeTransmission extends MorseCodeTransmission {
 
-    private final RgbBlinkMVisualEffect rgbBlinkMColour;
+    private final RgbBlinkMVisualEffect rgbBlinkMVisualEffect;
 
     public BlinkMMorseCodeTransmission(RgbBlinkMVisualEffect rgbBlinkMColour) {
 
-        this.rgbBlinkMColour = rgbBlinkMColour;
+        this.rgbBlinkMVisualEffect = rgbBlinkMColour;
     }
 
     @Override
     protected void signalOn() {
 
-        rgbBlinkMColour.makeWhite();
-        rgbBlinkMColour.apply();
+        rgbBlinkMVisualEffect.goWhite();
     }
 
     @Override
     protected void signalOff() {
 
-        rgbBlinkMColour.makeBlack();
-        rgbBlinkMColour.apply();
+        rgbBlinkMVisualEffect.goBlack();
     }
 }
