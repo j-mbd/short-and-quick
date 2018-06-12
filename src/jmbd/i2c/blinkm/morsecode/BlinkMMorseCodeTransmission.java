@@ -1,6 +1,6 @@
 package jmbd.i2c.blinkm.morsecode;
 
-import jmbd.i2c.blinkm.colour.RgbBlinkMColour;
+import jmbd.i2c.blinkm.colour.RgbBlinkMVisualEffect;
 
 /**
  * THIS SOFTWARE IS PROVIDED BY Savvas Moysidis “AS IS” AND ANY EXPRESS OR
@@ -18,9 +18,9 @@ import jmbd.i2c.blinkm.colour.RgbBlinkMColour;
  */
 public class BlinkMMorseCodeTransmission extends MorseCodeTransmission {
 
-    private final RgbBlinkMColour rgbBlinkMColour;
+    private final RgbBlinkMVisualEffect rgbBlinkMColour;
 
-    public BlinkMMorseCodeTransmission(RgbBlinkMColour rgbBlinkMColour) {
+    public BlinkMMorseCodeTransmission(RgbBlinkMVisualEffect rgbBlinkMColour) {
 
         this.rgbBlinkMColour = rgbBlinkMColour;
     }

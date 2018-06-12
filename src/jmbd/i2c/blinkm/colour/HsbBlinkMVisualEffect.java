@@ -22,14 +22,14 @@ import jmbd.i2c.blinkm.command.BlinkMCommandExecution;
  *
  * @author savvas
  */
-public class HsbBlinkMColour extends BlinkMColour {
+public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
 
     private static final char FADE_TO_HSB_COLOUR_MNIC = 'h';
     private static final char FADE_TO_RANDOM_HSB_COLOUR_MNIC = 'H';
 
     private boolean hueSet;
 
-    public HsbBlinkMColour(BlinkMCommandExecution commandExecution) {
+    public HsbBlinkMVisualEffect(BlinkMCommandExecution commandExecution) {
 
         super(commandExecution);
     }

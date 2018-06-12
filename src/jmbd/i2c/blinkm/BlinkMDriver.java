@@ -3,8 +3,8 @@ package jmbd.i2c.blinkm;
 import jmbd.i2c.blinkm.admin.BlinkMDeviceAdministration;
 import jmbd.i2c.blinkm.admin.FirmwareVersion;
 import jmbd.i2c.blinkm.admin.StartupParams;
-import jmbd.i2c.blinkm.colour.HsbBlinkMColour;
-import jmbd.i2c.blinkm.colour.RgbBlinkMColour;
+import jmbd.i2c.blinkm.colour.HsbBlinkMVisualEffect;
+import jmbd.i2c.blinkm.colour.RgbBlinkMVisualEffect;
 import jmbd.i2c.blinkm.command.BlinkMCommandExecution;
 import jmbd.i2c.blinkm.morsecode.BlinkMMorseCodeTransmission;
 import jmbd.i2c.blinkm.script.BlinkMBuiltInScript;
@@ -64,8 +64,8 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
 
     private I2CDevice blinkMHandle;
 
-    private RgbBlinkMColour rgbColour;
-    private HsbBlinkMColour hsbColour;
+    private RgbBlinkMVisualEffect rgbColour;
+    private HsbBlinkMVisualEffect hsbColour;
     private BlinkMBuiltInScript buildInScript;
     private BlinkMCustomScript customScript;
     private BlinkMDeviceAdministration blinkMDeviceAdministration;
@@ -80,8 +80,8 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
             blinkMHandle = blinkMHandle();
             BlinkMCommandExecution commandExecution = new BlinkMCommandExecution(blinkMHandle);
 
-            rgbColour = new RgbBlinkMColour(commandExecution);
-            hsbColour = new HsbBlinkMColour(commandExecution);
+            rgbColour = new RgbBlinkMVisualEffect(commandExecution);
+            hsbColour = new HsbBlinkMVisualEffect(commandExecution);
             buildInScript = new BlinkMBuiltInScript(commandExecution);
             customScript = new BlinkMCustomScript(commandExecution);
             blinkMDeviceAdministration = new BlinkMDeviceAdministration(commandExecution);
@@ -191,7 +191,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
 
             timeDelay.pauseMillis(5_000);
 
-            RgbBlinkMColour currentDeviceColour = rgbColour.getCurrentDeviceColour();
+            RgbBlinkMVisualEffect currentDeviceColour = rgbColour.getCurrentDeviceColour();
             System.out.println(currentDeviceColour);
 
             timeDelay.pauseMillis(5_000);
@@ -242,11 +242,11 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
         customScript.setRepeats(10);
 
         BlinkMScriptLine scriptLine = new BlinkMScriptLine();
-        RgbBlinkMColour colour = new RgbBlinkMColour(commandExecution);
+        RgbBlinkMVisualEffect colour = new RgbBlinkMVisualEffect(commandExecution);
 
         scriptLine.setTicks(Short.parseShort("150"));
         colour.setR(Short.parseShort("255"));
-        scriptLine.setCommand(colour.changeNowRawCommand());
+        scriptLine.setCommand(colour.applyRawCommand());
         customScript.write(scriptLine);
 
         if (!customScript.maxLinesReached()) {
@@ -258,7 +258,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
 
         scriptLine.setTicks(Short.parseShort("75"));
         colour.setG(Short.parseShort("255"));
-        scriptLine.setCommand(colour.changeNowRawCommand());
+        scriptLine.setCommand(colour.applyRawCommand());
         customScript.write(scriptLine);
 
         if (!customScript.maxLinesReached()) {
@@ -270,7 +270,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
 
         scriptLine.setTicks(Short.parseShort("150"));
         colour.setR(Short.parseShort("255"));
-        scriptLine.setCommand(colour.changeNowRawCommand());
+        scriptLine.setCommand(colour.applyRawCommand());
         customScript.write(scriptLine);
 
         customScript.setLength(Short.valueOf("3"));

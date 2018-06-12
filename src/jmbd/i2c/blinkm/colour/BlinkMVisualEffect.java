@@ -26,7 +26,7 @@ import jmbd.i2c.blinkm.command.BlinkMCommandExecution;
  *
  * @author savvas
  */
-abstract class BlinkMColour {
+abstract class BlinkMVisualEffect {
 
     private short quantityA;
     private short quantityB;
@@ -38,7 +38,7 @@ abstract class BlinkMColour {
 
     protected BlinkMCommandExecution commandExecution;
 
-    protected BlinkMColour(BlinkMCommandExecution commandExecution) {
+    protected BlinkMVisualEffect(BlinkMCommandExecution commandExecution) {
 
         this.commandExecution = commandExecution;
     }

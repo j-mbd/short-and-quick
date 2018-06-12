@@ -17,7 +17,7 @@ import jmbd.commons.ByteConversion;
  *
  * @author savvas
  */
-public class RgbBlinkMColour extends BlinkMColour {
+public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
 
     private static final char GO_TO_RGB_COLOUR_NOW_MNIC = 'n';
     private static final char FADE_TO_RGB_COLOUR_MNIC = 'c';
@@ -26,7 +26,7 @@ public class RgbBlinkMColour extends BlinkMColour {
 
     private final ByteConversion byteConversion;
 
-    public RgbBlinkMColour(BlinkMCommandExecution commandExecution) {
+    public RgbBlinkMVisualEffect(BlinkMCommandExecution commandExecution) {
 
         super(commandExecution);
         byteConversion = new ByteConversion();
@@ -134,9 +134,9 @@ public class RgbBlinkMColour extends BlinkMColour {
         return getQuantityCRandomness();
     }
 
-    public RgbBlinkMColour getCurrentDeviceColour() {
+    public RgbBlinkMVisualEffect getCurrentDeviceColour() {
 
-        RgbBlinkMColour c = new RgbBlinkMColour(commandExecution);
+        RgbBlinkMVisualEffect c = new RgbBlinkMVisualEffect(commandExecution);
 
         byte[] cmd = {GET_CURRENT_RGB_COLOUR_MNIC};
         byte[] retVal = new byte[3]; // Not really a magic-number...just 3 values for R-G-B
@@ -167,7 +167,7 @@ public class RgbBlinkMColour extends BlinkMColour {
         commandExecution.runWithNoReturnValue(cmd);
     }
 
-    public byte[] changeNowRawCommand() {
+    public byte[] applyRawCommand() {
 
         byte[] cmd = {GO_TO_RGB_COLOUR_NOW_MNIC, (byte) getR(), (byte) getG(), (byte) getB()};
 
