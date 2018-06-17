@@ -15,6 +15,12 @@ import jmbd.commons.ByteConversion;
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
+ * * INVARIANTS:
+ *
+ * 1) R,G,B values between [0 TO 255]
+ *
+ * 2) R,G,B randomness values between [0 TO 255]
+ *
  * @author savvas
  */
 public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
