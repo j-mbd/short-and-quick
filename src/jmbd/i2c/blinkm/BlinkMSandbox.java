@@ -53,11 +53,11 @@ import jdk.dio.i2cbus.I2CDeviceConfig;
  * MIDlet-Permission-4: javax.microedition.io.SocketProtocolPermission
  * "socket://:5000"
  *
- * MIDlet-Push-1: socket://:5000,com.cos.jmbd.i2c.blinkm.BlinkMDriver,*
+ * MIDlet-Push-1: socket://:5000,com.cos.jmbd.i2c.blinkm.BlinkMSandbox,*
  *
  * @author savvas
  */
-public class BlinkMDriver extends CommonOperationsMIDlet {
+public class BlinkMSandbox extends CommonOperationsMIDlet {
 
     private static final int DEVICE_ADDRESS = 0x09;
     private static final int SENSOR_ADDRESS_SIZE = 7;
@@ -108,6 +108,12 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
         }
     }
 
+    /**
+     * Open-up a terminal, Telnet into port 5000 (or whatever port you specified
+     * in your jad file) and type something (like "Hello World"). You should see
+     * your BlinkM translating that to Morse-code light signals.
+     *
+     */
     private void acceptMorseCodeRequest() {
 
         String[] pendingConnections = PushRegistry.listConnections(true);
@@ -185,15 +191,15 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
             System.out.println("Target R,G,B:  " + targetR + ", " + targetG + ", " + targetB);
 
             // set random colour...
-            rgbBlinkMVisualEffect.setR(targetR);
-            rgbBlinkMVisualEffect.setG(targetG);
-            rgbBlinkMVisualEffect.setB(targetB);
+            rgbBlinkMVisualEffect.setTargetR(targetR);
+            rgbBlinkMVisualEffect.setTargetG(targetG);
+            rgbBlinkMVisualEffect.setTargetB(targetB);
             rgbBlinkMVisualEffect.apply();
 
             timeDelay.pauseMillis(5_000);
 
-            RgbBlinkMVisualEffect currentDeviceColour = rgbBlinkMVisualEffect.getCurrentDeviceColour();
-            System.out.println(currentDeviceColour);
+            rgbBlinkMVisualEffect.setTargetRgbWithCurrentDeviceColour();
+            System.out.println(rgbBlinkMVisualEffect);
 
             timeDelay.pauseMillis(5_000);
         }
@@ -212,9 +218,9 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
             System.out.println("Target H,S,B:  " + targetH + ", " + targetS + ", " + targetB);
 
             // set random hsb colour...
-            hsbBlinkMVisualEffect.setH(targetH);
-            hsbBlinkMVisualEffect.setS(targetS);
-            hsbBlinkMVisualEffect.setB(targetB);
+            hsbBlinkMVisualEffect.setTargetH(targetH);
+            hsbBlinkMVisualEffect.setTargetS(targetS);
+            hsbBlinkMVisualEffect.setTargetB(targetB);
             hsbBlinkMVisualEffect.fadeApply();
 
             timeDelay.pauseMillis(1_000);
@@ -246,7 +252,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
         RgbBlinkMVisualEffect colour = new RgbBlinkMVisualEffect(commandExecution);
 
         scriptLine.setTicks(Short.parseShort("150"));
-        colour.setR(Short.parseShort("255"));
+        colour.setTargetR(Short.parseShort("255"));
         scriptLine.setCommand(colour.applyRawCommand());
         customScript.write(scriptLine);
 
@@ -258,7 +264,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
         }
 
         scriptLine.setTicks(Short.parseShort("75"));
-        colour.setG(Short.parseShort("255"));
+        colour.setTargetG(Short.parseShort("255"));
         scriptLine.setCommand(colour.applyRawCommand());
         customScript.write(scriptLine);
 
@@ -270,7 +276,7 @@ public class BlinkMDriver extends CommonOperationsMIDlet {
         }
 
         scriptLine.setTicks(Short.parseShort("150"));
-        colour.setR(Short.parseShort("255"));
+        colour.setTargetR(Short.parseShort("255"));
         scriptLine.setCommand(colour.applyRawCommand());
         customScript.write(scriptLine);
 

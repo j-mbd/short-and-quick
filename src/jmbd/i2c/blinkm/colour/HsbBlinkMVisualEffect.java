@@ -41,12 +41,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param h
      */
-    public void setH(short h) {
+    public void setTargetH(short h) {
 
         setQuantityA(h);
     }
 
-    public short getH() {
+    public short getTargetH() {
 
         return getQuantityA();
     }
@@ -58,12 +58,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param s
      */
-    public void setS(short s) {
+    public void setTargetS(short s) {
 
         setQuantityB(s);
     }
 
-    public short getS() {
+    public short getTargetS() {
 
         return getQuantityB();
     }
@@ -75,12 +75,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param b
      */
-    public void setB(short b) {
+    public void setTargetB(short b) {
 
         setQuantityC(b);
     }
 
-    public short getB() {
+    public short getTargetB() {
 
         return getQuantityC();
     }
@@ -92,12 +92,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param hRandomness
      */
-    public void setHRandomness(short hRandomness) {
+    public void setTargetHRandomness(short hRandomness) {
 
         setQuantityARandomness(hRandomness);
     }
 
-    public short getHRandomness() {
+    public short getTargetHRandomness() {
 
         return getQuantityARandomness();
     }
@@ -109,12 +109,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param sRandomness
      */
-    public void setSRandomness(short sRandomness) {
+    public void setTargetSRandomness(short sRandomness) {
 
         setQuantityBRandomness(sRandomness);
     }
 
-    public short getSRandomness() {
+    public short getTargetSRandomness() {
 
         return getQuantityBRandomness();
     }
@@ -126,23 +126,14 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param bRandomness
      */
-    public void setBRandomness(short bRandomness) {
+    public void setTargetBRandomness(short bRandomness) {
 
         setQuantityCRandomness(bRandomness);
     }
 
-    public short getBRandomness() {
+    public short getTargetBRandomness() {
 
         return getQuantityCRandomness();
-    }
-
-    /**
-     * A no-op.
-     *
-     * (not specified for HSB colours)
-     */
-    @Override
-    protected void apply() {
     }
 
     /**
@@ -159,10 +150,9 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      * "hue-set" flag is on
      *
      */
-    @Override
     public void fadeApply() {
 
-        byte[] cmd = {FADE_TO_HSB_COLOUR_MNIC, (byte) getH(), (byte) getS(), (byte) getB()};
+        byte[] cmd = {FADE_TO_HSB_COLOUR_MNIC, (byte) getTargetH(), (byte) getTargetS(), (byte) getTargetB()};
         commandExecution.runWithNoReturnValue(cmd);
 
         hueSet = true;
@@ -182,12 +172,11 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      * the fadeApply() method.
      *
      */
-    @Override
     public void fadeToRandomApply() {
 
         assert hueSet() : "Device is not configured with a hue";
 
-        byte[] cmd = {FADE_TO_RANDOM_HSB_COLOUR_MNIC, (byte) getHRandomness(), (byte) getSRandomness(), (byte) getBRandomness()};
+        byte[] cmd = {FADE_TO_RANDOM_HSB_COLOUR_MNIC, (byte) getTargetHRandomness(), (byte) getTargetSRandomness(), (byte) getTargetBRandomness()};
         commandExecution.runWithNoReturnValue(cmd);
     }
 

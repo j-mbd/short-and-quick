@@ -39,12 +39,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param r
      */
-    public void setR(short r) {
+    public void setTargetR(short r) {
 
         setQuantityA(r);
     }
 
-    public short getR() {
+    public short getTargetR() {
 
         return getQuantityA();
     }
@@ -56,12 +56,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param g
      */
-    public void setG(short g) {
+    public void setTargetG(short g) {
 
         setQuantityB(g);
     }
 
-    public short getG() {
+    public short getTargetG() {
 
         return getQuantityB();
     }
@@ -73,12 +73,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param b
      */
-    public void setB(short b) {
+    public void setTargetB(short b) {
 
         setQuantityC(b);
     }
 
-    public short getB() {
+    public short getTargetB() {
 
         return getQuantityC();
     }
@@ -90,12 +90,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param rRandomness
      */
-    public void setRRandomness(short rRandomness) {
+    public void setTargetRRandomness(short rRandomness) {
 
         setQuantityARandomness(rRandomness);
     }
 
-    public short getRRandomness() {
+    public short getTargetRRandomness() {
 
         return getQuantityARandomness();
     }
@@ -107,12 +107,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param gRandomness
      */
-    public void setGRandomness(short gRandomness) {
+    public void setTargetGRandomness(short gRandomness) {
 
         setQuantityBRandomness(gRandomness);
     }
 
-    public short getGRandomness() {
+    public short getTargetGRandomness() {
 
         return getQuantityBRandomness();
     }
@@ -124,12 +124,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      *
      * @param bRandomness
      */
-    public void setBRandomness(short bRandomness) {
+    public void setTargetBRandomness(short bRandomness) {
 
         setQuantityCRandomness(bRandomness);
     }
 
-    public short getBRandomness() {
+    public short getTargetBRandomness() {
 
         return getQuantityCRandomness();
     }
@@ -144,32 +144,40 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
         commandExecution.runAndPopulateReturnValue(cmd, retVal);
 
         byteConversion.setByte(retVal[0]);
-        c.setR(byteConversion.asShort());
+        c.setTargetR(byteConversion.asShort());
 
         byteConversion.setByte(retVal[1]);
-        c.setG(byteConversion.asShort());
+        c.setTargetG(byteConversion.asShort());
 
         byteConversion.setByte(retVal[2]);
-        c.setB(byteConversion.asShort());
+        c.setTargetB(byteConversion.asShort());
 
         return c;
+    }
+
+    public void setTargetRgbWithCurrentDeviceColour() {
+
+        RgbBlinkMVisualEffect ve = getCurrentDeviceColour();
+
+        setTargetR(ve.getTargetR());
+        setTargetG(ve.getTargetG());
+        setTargetB(ve.getTargetB());
     }
 
     /**
      * Updates the device with the currently set R,G,B values applying no delay.
      *
      */
-    @Override
     public void apply() {
 
-        byte[] cmd = {GO_TO_RGB_COLOUR_NOW_MNIC, (byte) getR(), (byte) getG(), (byte) getB()};
+        byte[] cmd = {GO_TO_RGB_COLOUR_NOW_MNIC, (byte) getTargetR(), (byte) getTargetG(), (byte) getTargetB()};
 
         commandExecution.runWithNoReturnValue(cmd);
     }
 
     public byte[] applyRawCommand() {
 
-        byte[] cmd = {GO_TO_RGB_COLOUR_NOW_MNIC, (byte) getR(), (byte) getG(), (byte) getB()};
+        byte[] cmd = {GO_TO_RGB_COLOUR_NOW_MNIC, (byte) getTargetR(), (byte) getTargetG(), (byte) getTargetB()};
 
         return cmd;
     }
@@ -182,17 +190,16 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      * results in maximum brightness.
      *
      */
-    @Override
     public void fadeApply() {
 
-        byte[] cmd = {FADE_TO_RGB_COLOUR_MNIC, (byte) getR(), (byte) getG(), (byte) getB()};
+        byte[] cmd = {FADE_TO_RGB_COLOUR_MNIC, (byte) getTargetR(), (byte) getTargetG(), (byte) getTargetB()};
 
         commandExecution.runWithNoReturnValue(cmd);
     }
 
     public byte[] fadeRawCommand() {
 
-        byte[] cmd = {FADE_TO_RGB_COLOUR_MNIC, (byte) getR(), (byte) getG(), (byte) getB()};
+        byte[] cmd = {FADE_TO_RGB_COLOUR_MNIC, (byte) getTargetR(), (byte) getTargetG(), (byte) getTargetB()};
 
         return cmd;
     }
@@ -204,17 +211,16 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      * A value of "0" results in no change at all.
      *
      */
-    @Override
     public void fadeToRandomApply() {
 
-        byte[] cmd = {FADE_TO_RANDOM_RGB_COLOUR_MNIC, (byte) getRRandomness(), (byte) getGRandomness(), (byte) getBRandomness()};
+        byte[] cmd = {FADE_TO_RANDOM_RGB_COLOUR_MNIC, (byte) getTargetRRandomness(), (byte) getTargetGRandomness(), (byte) getTargetBRandomness()};
 
         commandExecution.runWithNoReturnValue(cmd);
     }
 
     public byte[] fadeToRandomRawCommand() {
 
-        byte[] cmd = {FADE_TO_RANDOM_RGB_COLOUR_MNIC, (byte) getRRandomness(), (byte) getGRandomness(), (byte) getBRandomness()};
+        byte[] cmd = {FADE_TO_RANDOM_RGB_COLOUR_MNIC, (byte) getTargetRRandomness(), (byte) getTargetGRandomness(), (byte) getTargetBRandomness()};
 
         return cmd;
     }
@@ -232,9 +238,9 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void makeWhite() {
 
-        setR((short) 255);
-        setG((short) 255);
-        setB((short) 255);
+        setTargetR((short) 255);
+        setTargetG((short) 255);
+        setTargetB((short) 255);
     }
 
     /**
@@ -260,6 +266,6 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
     @Override
     public String toString() {
 
-        return "[R:" + getR() + "], [G:" + getG() + "], [B:" + getB() + "]";
+        return "[R:" + getTargetR() + "], [G:" + getTargetG() + "], [B:" + getTargetB() + "]";
     }
 }

@@ -168,10 +168,4 @@ abstract class BlinkMVisualEffect {
         quantityB = quantityBRandomness = 0;
         quantityC = quantityCRandomness = 0;
     }
-
-    protected abstract void apply();
-
-    protected abstract void fadeApply();
-
-    protected abstract void fadeToRandomApply();
 }
