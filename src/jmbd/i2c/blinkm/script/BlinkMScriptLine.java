@@ -17,16 +17,17 @@ import java.util.Arrays;
  *
  * INVARIANTS:
  *
- * command.length == EXACT_COMMAND_LENGTH
+ * command.length == maxCommandLength
  *
  * @author savvas
  */
 public class BlinkMScriptLine {
 
-    private static final int EXACT_COMMAND_LENGTH = 4;
+    private static final short DEFAULT_MAX_COMMAND_LENGTH = 4;
 
     private short ticks;
     private byte[] command;
+    private short maxCommandLength = DEFAULT_MAX_COMMAND_LENGTH;
 
     /**
      * REQUIRES:
@@ -45,12 +46,17 @@ public class BlinkMScriptLine {
         this.ticks = ticks;
     }
 
+    public short getTicks() {
+
+        return (ticks);
+    }
+
     /**
      * REQUIRES:
      *
      * 1) command not null
      *
-     * 2) command.length between [1 TO 4]
+     * 2) command.length between [1 TO maxCommandLength]
      *
      * @param command
      */
@@ -63,26 +69,42 @@ public class BlinkMScriptLine {
         zeroExtendCommandIfNecessary();
     }
 
-    public short getTicks() {
+    public byte[] getCommand() {
 
-        return (ticks);
+        return (command);
     }
 
-    public byte[] getCommand() {
-        return (command);
+    /**
+     * REQUIRES:
+     *
+     * maxCommandLength > 0
+     *
+     * @param maxCommandLength
+     */
+    public void setMaxCommandLength(short maxCommandLength) {
+
+        assert maxCommandLength > 0 : "exactCommandLength is negative";
+
+        this.maxCommandLength = maxCommandLength;
+    }
+
+    public short getMaxCommandLength() {
+
+        return (maxCommandLength);
     }
 
     /**
      * According to datasheet:
      *
-     * "Any command with less than 3 arguments should fill out the remaining
-     * arguments slots with zeros."
+     * "Any command with less than "maxCommandLength" arguments (four in this
+     * implementation) should fill out the remaining arguments slots with
+     * zeros."
      *
      */
     protected void zeroExtendCommandIfNecessary() {
 
-        if (command.length != EXACT_COMMAND_LENGTH) {
-            command = Arrays.copyOf(command, EXACT_COMMAND_LENGTH);
+        if (command.length != getMaxCommandLength()) {
+            command = Arrays.copyOf(command, getMaxCommandLength());
         }
     }
 
@@ -97,12 +119,14 @@ public class BlinkMScriptLine {
         if (tcks >= 1 && tcks <= 255) {
             scriptLine.setTicks(tcks);
         } else {
-            // device gave us a wrong value...oops
+            // device retuened a wrong value...oops
             throw new IllegalArgumentException("Ticks value [" + tcks + "] in device is invalid");
         }
 
-        byte[] cmd = new byte[EXACT_COMMAND_LENGTH];
+        byte[] cmd = new byte[scriptLine.getMaxCommandLength()];
+
         System.arraycopy(raw, 1, cmd, 0, cmd.length);
+
         scriptLine.setCommand(cmd);
 
         return scriptLine;

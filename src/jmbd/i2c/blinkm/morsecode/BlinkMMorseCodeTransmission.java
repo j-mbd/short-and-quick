@@ -1,5 +1,6 @@
 package jmbd.i2c.blinkm.morsecode;
 
+import jmbd.commons.TimeDelay;
 import jmbd.i2c.blinkm.colour.RgbBlinkMVisualEffect;
 
 /**
@@ -20,9 +21,10 @@ public class BlinkMMorseCodeTransmission extends MorseCodeTransmission {
 
     private final RgbBlinkMVisualEffect rgbBlinkMVisualEffect;
 
-    public BlinkMMorseCodeTransmission(RgbBlinkMVisualEffect rgbBlinkMColour) {
+    public BlinkMMorseCodeTransmission(RgbBlinkMVisualEffect rgbBlinkMVisualEffect, TimeDelay timeDelay) {
 
-        this.rgbBlinkMVisualEffect = rgbBlinkMColour;
+        super(timeDelay);
+        this.rgbBlinkMVisualEffect = rgbBlinkMVisualEffect;
     }
 
     @Override

@@ -39,10 +39,10 @@ import jdk.dio.i2cbus.I2CDeviceConfig;
  * Some sandbox space to experiment with features of BlinkM classes.
  *
  * NOTE: acceptMorseCodeRequest() requires Push-Registry to have been set-up in
- * jad and the app to have been "ams-install" via the VM proxy. The
- * Push-Registry doesn't seem to work if the app is installed via NetBeans (i.e.
- * telneting into the port works but the startApp() method isn't invoked when
- * data is sent through). It only seems to work if "ams-install"-ed manually..
+ * jad and the app "ams-install"-ed via the VM proxy. The Push-Registry doesn't
+ * seem to work if the app is installed via NetBeans (i.e. telneting into the
+ * port works but the startApp() method isn't invoked when data is sent
+ * through). It only seems to work if "ams-install"-ed manually..
  *
  * The following are the Push Registry related entries required in jad (don't
  * forget to change the port number to whatever number you prefer):
@@ -54,6 +54,7 @@ import jdk.dio.i2cbus.I2CDeviceConfig;
  * "socket://:5000"
  *
  * MIDlet-Push-1: socket://:5000,com.cos.jmbd.i2c.blinkm.BlinkMSandbox,*
+ *
  *
  * @author savvas
  */
@@ -89,15 +90,14 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
 
             timeDelay = new TimeDelay();
 
-            codeTransmission = new BlinkMMorseCodeTransmission(rgbBlinkMVisualEffect);
+            codeTransmission = new BlinkMMorseCodeTransmission(rgbBlinkMVisualEffect, timeDelay);
             codeTransmission.setTimeUnitDuration(300);
-            codeTransmission.setTimeDelay(timeDelay);
 
             blinkMDeviceAdministration.stopCurrentlyPlayingScript();
 
             //blinkMRgbLights();
             //blinkMHsbLights();
-            //playScript(Short.valueOf("16"));
+            //playScript(Short.valueOf("15")); // script 15 is "the seasons"
             //writeScriptAndPlay(commandExecution);
             //readScript(Short.valueOf("0"));
             //doAdminTasks();
@@ -105,76 +105,6 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
             acceptMorseCodeRequest();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
-        }
-    }
-
-    /**
-     * Open-up a terminal, Telnet into port 5000 (or whatever port you specified
-     * in your jad file) and type something (like "Hello World"). You should see
-     * your BlinkM translating that to Morse-code light signals.
-     *
-     */
-    private void acceptMorseCodeRequest() {
-
-        String[] pendingConnections = PushRegistry.listConnections(true);
-
-        if (pendingConnections != null && pendingConnections.length > 0) {
-
-            for (String s : pendingConnections) {
-
-                rgbBlinkMVisualEffect.goBlack();
-
-                System.out.println("Attemping to open connection: " + s);
-
-                try (ServerSocketConnection ssc = (ServerSocketConnection) Connector.open(s);
-                        StreamConnection sc = ssc.acceptAndOpen();
-                        InputStream is = sc.openInputStream()) {
-                    for (int i = is.read(); i != -1; i = is.read()) {
-
-                        char c = (char) i;
-                        if (!Character.isISOControl(c) && !Character.isWhitespace(c)) {
-                            codeTransmission.send(c);
-                        }
-                    }
-                } catch (IOException ioex) {
-                    throw new RuntimeException(ioex);
-                }
-            }
-        } else {
-            System.out.println("No pending connections.");
-        }
-
-        destroyApp(true);
-    }
-
-    private void testMorseCode() {
-
-        codeTransmission.setTimeUnitDuration(300);
-        codeTransmission.setTimeDelay(new TimeDelay());
-
-        codeTransmission.send('A');
-        timeDelay.pauseMillis(5_000);
-        codeTransmission.send('J');
-        timeDelay.pauseMillis(5_000);
-        codeTransmission.send('S');
-    }
-
-    private void readScript(short id) {
-
-        // black-out
-        rgbBlinkMVisualEffect.makeBlack();
-
-        buildInScript.setId(id);
-        buildInScript.setLineNumber(Short.valueOf("2"));
-
-        BlinkMScriptLine scriptLine = buildInScript.read();
-
-        BlinkMCommandExecution commandExecution = new BlinkMCommandExecution(blinkMHandle);
-
-        for (int i = 0; i < 10; i++) {
-            rgbBlinkMVisualEffect.fadeApply();
-            timeDelay.pauseMillis(5_000);
-            commandExecution.runWithNoReturnValue(scriptLine.getCommand());
         }
     }
 
@@ -231,6 +161,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
 
         // fadeApply to black(i.e. switch off..)
         rgbBlinkMVisualEffect.makeBlack();
+        // or simply rgbBlinkMVisualEffect.apply() but let's test thi works too..
         rgbBlinkMVisualEffect.fadeApply();
 
         timeDelay.pauseMillis(3_000);
@@ -251,6 +182,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
         BlinkMScriptLine scriptLine = new BlinkMScriptLine();
         RgbBlinkMVisualEffect colour = new RgbBlinkMVisualEffect(commandExecution);
 
+        // Target test-sequence is R-G-R
         scriptLine.setTicks(Short.parseShort("150"));
         colour.setTargetR(Short.parseShort("255"));
         scriptLine.setCommand(colour.applyRawCommand());
@@ -260,7 +192,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
             customScript.increaseLineNumber();
             colour.makeBlack();
         } else {
-            System.out.println("Max lines has been reached..cannot add more lines");
+            System.out.println("Max-lines limit has been reached..cannot add more lines");
         }
 
         scriptLine.setTicks(Short.parseShort("75"));
@@ -272,7 +204,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
             customScript.increaseLineNumber();
             colour.makeBlack();
         } else {
-            System.out.println("Max lines has been reached..cannot add more lines");
+            System.out.println("Max-lines limit has been reached..cannot add more lines");
         }
 
         scriptLine.setTicks(Short.parseShort("150"));
@@ -286,7 +218,27 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
 
         // Play
         timeDelay.pauseMillis(5_000);
+
         playScript(Short.valueOf("0"));
+    }
+
+    private void readScript(short id) {
+
+        // black-out
+        rgbBlinkMVisualEffect.makeBlack();
+
+        buildInScript.setId(id);
+        buildInScript.setLineNumber(Short.valueOf("2"));
+
+        BlinkMScriptLine scriptLine = buildInScript.read();
+
+        BlinkMCommandExecution commandExecution = new BlinkMCommandExecution(blinkMHandle);
+
+        for (int i = 0; i < 10; i++) {
+            rgbBlinkMVisualEffect.fadeApply();
+            timeDelay.pauseMillis(5_000);
+            commandExecution.runWithNoReturnValue(scriptLine.getCommand());
+        }
     }
 
     private void doAdminTasks() {
@@ -305,6 +257,54 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
         params.setScriptPlaybackSpeed((byte) 0);
 
         blinkMDeviceAdministration.setStartupParams(params);
+    }
+
+    private void testMorseCode() {
+
+        codeTransmission.setTimeUnitDuration(300);
+
+        codeTransmission.send('J');
+        codeTransmission.send('m');
+        codeTransmission.send('b');
+        codeTransmission.send('d');
+    }
+
+    /**
+     * Open-up a terminal, Telnet into port 5000 of your Ras-Pi (or whatever
+     * port you specified in your jad file) and type something like "Hello
+     * Cosmos". You should see your BlinkM translating this to Morse-code light
+     * signals.
+     *
+     */
+    private void acceptMorseCodeRequest() {
+
+        String[] pendingConnections = PushRegistry.listConnections(true);
+
+        if (pendingConnections != null && pendingConnections.length > 0) {
+
+            for (String s : pendingConnections) {
+                // first black-out
+                rgbBlinkMVisualEffect.goBlack();
+
+                try (ServerSocketConnection ssc = (ServerSocketConnection) Connector.open(s);
+                        StreamConnection sc = ssc.acceptAndOpen();
+                        InputStream is = sc.openInputStream()) {
+
+                    for (int i = is.read(); i != -1; i = is.read()) {
+
+                        char c = (char) i;
+                        codeTransmission.send(c);
+                    }
+                } catch (IOException ioex) {
+                    throw new RuntimeException(ioex);
+                }
+            }
+        } else {
+            // Don't forget to change the port on the message below to whatever you specified in jad to avoid having night-long debugging sessions..
+            System.out.println("No pending connections on port 5000");
+        }
+
+        destroyApp(true);
     }
 
     private I2CDevice blinkMHandle() throws IOException {

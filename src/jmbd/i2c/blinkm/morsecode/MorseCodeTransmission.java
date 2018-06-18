@@ -46,7 +46,25 @@ public abstract class MorseCodeTransmission {
     private long letterGapDuration;
     private long wordGapDuration;
 
-    private TimeDelay timeDelay;
+    private final TimeDelay timeDelay;
+
+    /**
+     * REQUIRES:
+     *
+     * timeDelay not null
+     *
+     * (For a more generic solution TimeDelay can be extended to introduce a
+     * "morse-code" specialised variant with a "timeUnit" variable and a
+     * apply(duration) function which can be used polymorphically here..)
+     *
+     * @param timeDelay
+     */
+    public MorseCodeTransmission(TimeDelay timeDelay) {
+
+        assert timeDelay != null : "timeDelay instance is null";
+
+        this.timeDelay = timeDelay;
+    }
 
     /**
      * REQUIRES:
@@ -86,24 +104,6 @@ public abstract class MorseCodeTransmission {
         assert interCharacterGapDuration == 1 * timeUnitDuration : "interCharacterGapDuration != (1 * timeUnitDuration)";
         assert letterGapDuration == 3 * timeUnitDuration : "letterGapDuration != (3 * timeUnitDuration)";
         assert wordGapDuration == 7 * timeUnitDuration : "wordGapDuration != (7 * timeUnitDuration)";
-    }
-
-    /**
-     * REQUIRES:
-     *
-     * timeDelay not null
-     *
-     * (For a more generic solution TimeDelay can be extended to introduce a
-     * "morse-code" specialised variant with a "timeUnit" variable and a
-     * apply(duration) function which can be used polymorphically here..)
-     *
-     * @param timeDelay
-     */
-    public void setTimeDelay(TimeDelay timeDelay) {
-
-        assert timeDelay != null : "timeDelay instance is null";
-
-        this.timeDelay = timeDelay;
     }
 
     /**
@@ -155,7 +155,7 @@ public abstract class MorseCodeTransmission {
             timeDelay.pauseMillis(letterGapDuration);
         } else {
             System.out.println("Character '" + c + "' not supported");
-            // or throw exception...
+            // or throw exception...?
             //throw new IllegalArgumentException("Character '" + c + "' not supported");
         }
     }
