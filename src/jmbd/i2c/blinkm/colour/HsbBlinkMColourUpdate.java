@@ -22,14 +22,14 @@ import jmbd.i2c.blinkm.command.BlinkMCommandExecution;
  *
  * @author savvas
  */
-public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
+public class HsbBlinkMColourUpdate extends BlinkMColourUpdate {
 
     private static final char FADE_TO_HSB_COLOUR_MNIC = 'h';
     private static final char FADE_TO_RANDOM_HSB_COLOUR_MNIC = 'H';
 
     private boolean hueSet;
 
-    public HsbBlinkMVisualEffect(BlinkMCommandExecution commandExecution) {
+    public HsbBlinkMColourUpdate(BlinkMCommandExecution commandExecution) {
 
         super(commandExecution);
     }
@@ -43,12 +43,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetH(short h) {
 
-        setQuantityA(h);
+        setTargetQuantityA(h);
     }
 
     public short getTargetH() {
 
-        return getQuantityA();
+        return getTargetQuantityA();
     }
 
     /**
@@ -60,12 +60,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetS(short s) {
 
-        setQuantityB(s);
+        setTargetQuantityB(s);
     }
 
     public short getTargetS() {
 
-        return getQuantityB();
+        return getTargetQuantityB();
     }
 
     /**
@@ -77,12 +77,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetB(short b) {
 
-        setQuantityC(b);
+        setTargetQuantityC(b);
     }
 
     public short getTargetB() {
 
-        return getQuantityC();
+        return getTargetQuantityC();
     }
 
     /**
@@ -94,12 +94,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetHRandomness(short hRandomness) {
 
-        setQuantityARandomness(hRandomness);
+        setTargetQuantityARandomness(hRandomness);
     }
 
     public short getTargetHRandomness() {
 
-        return getQuantityARandomness();
+        return getTargetQuantityARandomness();
     }
 
     /**
@@ -111,12 +111,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetSRandomness(short sRandomness) {
 
-        setQuantityBRandomness(sRandomness);
+        setTargetQuantityBRandomness(sRandomness);
     }
 
     public short getTargetSRandomness() {
 
-        return getQuantityBRandomness();
+        return getTargetQuantityBRandomness();
     }
 
     /**
@@ -128,12 +128,12 @@ public class HsbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetBRandomness(short bRandomness) {
 
-        setQuantityCRandomness(bRandomness);
+        setTargetQuantityCRandomness(bRandomness);
     }
 
     public short getTargetBRandomness() {
 
-        return getQuantityCRandomness();
+        return getTargetQuantityCRandomness();
     }
 
     /**

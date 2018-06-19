@@ -23,7 +23,7 @@ import jmbd.commons.ByteConversion;
  *
  * @author savvas
  */
-public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
+public class RgbBlinkMColourUpdate extends BlinkMColourUpdate {
 
     private static final char GO_TO_RGB_COLOUR_NOW_MNIC = 'n';
     private static final char FADE_TO_RGB_COLOUR_MNIC = 'c';
@@ -32,7 +32,7 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
 
     private final ByteConversion byteConversion;
 
-    public RgbBlinkMVisualEffect(BlinkMCommandExecution commandExecution) {
+    public RgbBlinkMColourUpdate(BlinkMCommandExecution commandExecution) {
 
         super(commandExecution);
         byteConversion = new ByteConversion();
@@ -47,12 +47,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetR(short r) {
 
-        setQuantityA(r);
+        setTargetQuantityA(r);
     }
 
     public short getTargetR() {
 
-        return getQuantityA();
+        return getTargetQuantityA();
     }
 
     /**
@@ -64,12 +64,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetG(short g) {
 
-        setQuantityB(g);
+        setTargetQuantityB(g);
     }
 
     public short getTargetG() {
 
-        return getQuantityB();
+        return getTargetQuantityB();
     }
 
     /**
@@ -81,12 +81,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetB(short b) {
 
-        setQuantityC(b);
+        setTargetQuantityC(b);
     }
 
     public short getTargetB() {
 
-        return getQuantityC();
+        return getTargetQuantityC();
     }
 
     /**
@@ -98,12 +98,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetRRandomness(short rRandomness) {
 
-        setQuantityARandomness(rRandomness);
+        setTargetQuantityARandomness(rRandomness);
     }
 
     public short getTargetRRandomness() {
 
-        return getQuantityARandomness();
+        return getTargetQuantityARandomness();
     }
 
     /**
@@ -115,12 +115,12 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetGRandomness(short gRandomness) {
 
-        setQuantityBRandomness(gRandomness);
+        setTargetQuantityBRandomness(gRandomness);
     }
 
     public short getTargetGRandomness() {
 
-        return getQuantityBRandomness();
+        return getTargetQuantityBRandomness();
     }
 
     /**
@@ -132,17 +132,17 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
      */
     public void setTargetBRandomness(short bRandomness) {
 
-        setQuantityCRandomness(bRandomness);
+        setTargetQuantityCRandomness(bRandomness);
     }
 
     public short getTargetBRandomness() {
 
-        return getQuantityCRandomness();
+        return getTargetQuantityCRandomness();
     }
 
-    public RgbBlinkMVisualEffect getCurrentDeviceColour() {
+    public RgbBlinkMColourUpdate getCurrentDeviceColour() {
 
-        RgbBlinkMVisualEffect c = new RgbBlinkMVisualEffect(commandExecution);
+        RgbBlinkMColourUpdate c = new RgbBlinkMColourUpdate(commandExecution);
 
         byte[] cmd = {GET_CURRENT_RGB_COLOUR_MNIC};
         byte[] retVal = new byte[3]; // Not really a magic-number...just 3 values for R-G-B
@@ -163,7 +163,7 @@ public class RgbBlinkMVisualEffect extends BlinkMVisualEffect {
 
     public void setTargetRgbWithCurrentDeviceColour() {
 
-        RgbBlinkMVisualEffect ve = getCurrentDeviceColour();
+        RgbBlinkMColourUpdate ve = getCurrentDeviceColour();
 
         setTargetR(ve.getTargetR());
         setTargetG(ve.getTargetG());

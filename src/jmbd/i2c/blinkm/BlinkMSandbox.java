@@ -3,8 +3,8 @@ package jmbd.i2c.blinkm;
 import jmbd.i2c.blinkm.admin.BlinkMDeviceAdministration;
 import jmbd.i2c.blinkm.admin.FirmwareVersion;
 import jmbd.i2c.blinkm.admin.StartupParams;
-import jmbd.i2c.blinkm.colour.HsbBlinkMVisualEffect;
-import jmbd.i2c.blinkm.colour.RgbBlinkMVisualEffect;
+import jmbd.i2c.blinkm.colour.HsbBlinkMColourUpdate;
+import jmbd.i2c.blinkm.colour.RgbBlinkMColourUpdate;
 import jmbd.i2c.blinkm.command.BlinkMCommandExecution;
 import jmbd.i2c.blinkm.morsecode.BlinkMMorseCodeTransmission;
 import jmbd.i2c.blinkm.script.BlinkMBuiltInScript;
@@ -66,8 +66,8 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
 
     private I2CDevice blinkMHandle;
 
-    private RgbBlinkMVisualEffect rgbBlinkMVisualEffect;
-    private HsbBlinkMVisualEffect hsbBlinkMVisualEffect;
+    private RgbBlinkMColourUpdate rgbBlinkMColourUpdate;
+    private HsbBlinkMColourUpdate hsbBlinkMColourUpdate;
     private BlinkMBuiltInScript buildInScript;
     private BlinkMCustomScript customScript;
     private BlinkMDeviceAdministration blinkMDeviceAdministration;
@@ -82,15 +82,15 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
             blinkMHandle = blinkMHandle();
             BlinkMCommandExecution commandExecution = new BlinkMCommandExecution(blinkMHandle);
 
-            rgbBlinkMVisualEffect = new RgbBlinkMVisualEffect(commandExecution);
-            hsbBlinkMVisualEffect = new HsbBlinkMVisualEffect(commandExecution);
+            rgbBlinkMColourUpdate = new RgbBlinkMColourUpdate(commandExecution);
+            hsbBlinkMColourUpdate = new HsbBlinkMColourUpdate(commandExecution);
             buildInScript = new BlinkMBuiltInScript(commandExecution);
             customScript = new BlinkMCustomScript(commandExecution);
             blinkMDeviceAdministration = new BlinkMDeviceAdministration(commandExecution);
 
             timeDelay = new TimeDelay();
 
-            codeTransmission = new BlinkMMorseCodeTransmission(rgbBlinkMVisualEffect, timeDelay);
+            codeTransmission = new BlinkMMorseCodeTransmission(rgbBlinkMColourUpdate, timeDelay);
             codeTransmission.setTimeUnitDuration(300);
 
             blinkMDeviceAdministration.stopCurrentlyPlayingScript();
@@ -121,15 +121,15 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
             System.out.println("Target R,G,B:  " + targetR + ", " + targetG + ", " + targetB);
 
             // set random colour...
-            rgbBlinkMVisualEffect.setTargetR(targetR);
-            rgbBlinkMVisualEffect.setTargetG(targetG);
-            rgbBlinkMVisualEffect.setTargetB(targetB);
-            rgbBlinkMVisualEffect.apply();
+            rgbBlinkMColourUpdate.setTargetR(targetR);
+            rgbBlinkMColourUpdate.setTargetG(targetG);
+            rgbBlinkMColourUpdate.setTargetB(targetB);
+            rgbBlinkMColourUpdate.apply();
 
             timeDelay.pauseMillis(5_000);
 
-            rgbBlinkMVisualEffect.setTargetRgbWithCurrentDeviceColour();
-            System.out.println(rgbBlinkMVisualEffect);
+            rgbBlinkMColourUpdate.setTargetRgbWithCurrentDeviceColour();
+            System.out.println(rgbBlinkMColourUpdate);
 
             timeDelay.pauseMillis(5_000);
         }
@@ -148,10 +148,11 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
             System.out.println("Target H,S,B:  " + targetH + ", " + targetS + ", " + targetB);
 
             // set random hsb colour...
-            hsbBlinkMVisualEffect.setTargetH(targetH);
-            hsbBlinkMVisualEffect.setTargetS(targetS);
-            hsbBlinkMVisualEffect.setTargetB(targetB);
-            hsbBlinkMVisualEffect.fadeApply();
+            hsbBlinkMColourUpdate.setTargetH(targetH);
+            hsbBlinkMColourUpdate.setTargetS(targetS);
+            hsbBlinkMColourUpdate.setTargetB(targetB);
+
+            hsbBlinkMColourUpdate.fadeApply();
 
             timeDelay.pauseMillis(1_000);
         }
@@ -160,9 +161,9 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
     private void playScript(short scriptId) {
 
         // fadeApply to black(i.e. switch off..)
-        rgbBlinkMVisualEffect.makeBlack();
-        // or simply rgbBlinkMVisualEffect.apply() but let's test thi works too..
-        rgbBlinkMVisualEffect.fadeApply();
+        rgbBlinkMColourUpdate.makeBlack();
+        // or simply rgbBlinkMColourUpdate.apply() but let's test fade works too..
+        rgbBlinkMColourUpdate.fadeApply();
 
         timeDelay.pauseMillis(3_000);
 
@@ -170,6 +171,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
         buildInScript.setId(scriptId);
         buildInScript.setRepeats(20);
         buildInScript.setLineNumber(Short.valueOf("0"));
+
         buildInScript.play();
     }
 
@@ -180,7 +182,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
         customScript.setRepeats(10);
 
         BlinkMScriptLine scriptLine = new BlinkMScriptLine();
-        RgbBlinkMVisualEffect colour = new RgbBlinkMVisualEffect(commandExecution);
+        RgbBlinkMColourUpdate colour = new RgbBlinkMColourUpdate(commandExecution);
 
         // Target test-sequence is R-G-R
         scriptLine.setTicks(Short.parseShort("150"));
@@ -210,10 +212,9 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
         scriptLine.setTicks(Short.parseShort("150"));
         colour.setTargetR(Short.parseShort("255"));
         scriptLine.setCommand(colour.applyRawCommand());
+
         customScript.write(scriptLine);
-
         customScript.setLength(Short.valueOf("3"));
-
         customScript.applyScriptLengthAndRepeats();
 
         // Play
@@ -225,7 +226,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
     private void readScript(short id) {
 
         // black-out
-        rgbBlinkMVisualEffect.makeBlack();
+        rgbBlinkMColourUpdate.makeBlack();
 
         buildInScript.setId(id);
         buildInScript.setLineNumber(Short.valueOf("2"));
@@ -235,7 +236,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
         BlinkMCommandExecution commandExecution = new BlinkMCommandExecution(blinkMHandle);
 
         for (int i = 0; i < 10; i++) {
-            rgbBlinkMVisualEffect.fadeApply();
+            rgbBlinkMColourUpdate.fadeApply();
             timeDelay.pauseMillis(5_000);
             commandExecution.runWithNoReturnValue(scriptLine.getCommand());
         }
@@ -251,6 +252,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
 
         StartupParams params = new StartupParams();
         params.withPlayScriptMode();
+        // script 16 is "thunderstorms" or something
         params.setScriptId((short) 16);
         params.setRepeats((short) 10);
         params.setFadeSpeed((short) 0x20);
@@ -284,7 +286,7 @@ public class BlinkMSandbox extends CommonOperationsMIDlet {
 
             for (String s : pendingConnections) {
                 // first black-out
-                rgbBlinkMVisualEffect.goBlack();
+                rgbBlinkMColourUpdate.goBlack();
 
                 try (ServerSocketConnection ssc = (ServerSocketConnection) Connector.open(s);
                         StreamConnection sc = ssc.acceptAndOpen();
