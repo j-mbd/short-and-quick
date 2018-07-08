@@ -87,7 +87,7 @@ public class BlinkMCustomScript {
     /**
      * REQUIRES:
      *
-     * max lines not reached (i.e. maxLinesReached() == false)
+     * max_lines_not_reached (i.e. maxLinesReached() == false)
      *
      */
     public void increaseLineNumber() {
@@ -100,7 +100,7 @@ public class BlinkMCustomScript {
     /**
      * REQUIRES:
      *
-     * min lines not reached (i.e. minLinesReached() == false)
+     * min_lines_not_reached (i.e. minLinesReached() == false)
      *
      */
     public void decreaseLineNumber() {
