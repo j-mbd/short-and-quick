@@ -16,17 +16,17 @@ package jmbd.i2c.mpu6050.device;
  */
 public interface AccelGyroTempSensor {
 
-    public abstract short getXAccel();
+    short getXAccel();
 
-    public abstract short getYAccel();
+    short getYAccel();
 
-    public abstract short getZAccel();
+    short getZAccel();
 
-    public abstract float getTemperature();
+    float getTemperature();
 
-    public abstract short getXGyro();
+    short getXGyro();
 
-    public abstract short getYGyro();
+    short getYGyro();
 
-    public abstract short getZGyro();
+    short getZGyro();
 }
