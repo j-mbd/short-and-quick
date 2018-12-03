@@ -85,7 +85,7 @@ public class Mpu6050Device extends CommonOperationsMIDlet {
         regValue.load();
         System.out.println("Current value of INT_PIN_CFG is " + regValue);
         // From datasheet: "When this bit is equal to 1, the INT pin is held high until the interrupt is cleared"
-        regValue.makeBitHighAt(5);
+        regValue.setBit(5);
         regValue.store();
         System.out.println("Current value of INT_PIN_CFG is " + regValue);
 
@@ -97,9 +97,9 @@ public class Mpu6050Device extends CommonOperationsMIDlet {
         regValue.wipeOut();
         // make SMPLRT_DIV == 7 so that sampling rate becomes 1KHz (see register SMPRT_DIV(0x19) for details)
         // WARNING: Any rate > 1KHz will kill the runtime almost instantly (a "kworker" process is keeping rather busy too..)
-        regValue.makeBitHighAt(0);
-        regValue.makeBitHighAt(1);
-        regValue.makeBitHighAt(2);
+        regValue.setBit(0);
+        regValue.setBit(1);
+        regValue.setBit(2);
 
         regValue.store();
         // let's print what we just stored

@@ -78,7 +78,7 @@ public abstract class RegisterValue {
      * WARNING: Be extremely careful when calling this method as it will
      * override the value that will potentially be store()'d later on..Might be
      * worth considering if only parts of the register value should be
-     * makeBitLowAt()'ed or makeBitHighAt()'ed instead.
+     * clearBit()'ed or setBit()'ed instead.
      *
      * ENSURES:
      *
@@ -118,7 +118,7 @@ public abstract class RegisterValue {
      *
      * @param index
      */
-    public void makeBitLowAt(int index) {
+    public void clearBit(int index) {
 
         assert index >= 0 && index <= 7 : "bit index not in [0 - 7] range";
 
@@ -134,7 +134,7 @@ public abstract class RegisterValue {
      *
      * @param index
      */
-    public void makeBitHighAt(int index) {
+    public void setBit(int index) {
 
         assert index >= 0 && index <= 7 : "bit index not in [0 - 7] range";
 
@@ -166,7 +166,7 @@ public abstract class RegisterValue {
      * WARNING: Be extremely careful when calling this method as it will
      * zero-out the value that will potentially be store()'d later on..Might be
      * worth considering if only parts of the register value should be
-     * makeBitLowAt()'ed or makeBitHighAt()'ed instead.
+     * clearBit()'ed or setBit()'ed instead.
      *
      * ENSURES:
      *

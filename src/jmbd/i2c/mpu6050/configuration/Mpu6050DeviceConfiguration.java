@@ -67,23 +67,23 @@ public class Mpu6050DeviceConfiguration {
             // All current non-AFS_SEL values need to be preserved so just modify the AFS_SEL bits
             case G_2:
                 // precondition met
-                registerValue.makeBitLowAt(4);
-                registerValue.makeBitLowAt(3);
+                registerValue.clearBit(4);
+                registerValue.clearBit(3);
                 break;
             case G_4:
                 // precondition met
-                registerValue.makeBitLowAt(4);
-                registerValue.makeBitHighAt(3);
+                registerValue.clearBit(4);
+                registerValue.setBit(3);
                 break;
             case G_8:
                 // precondition met
-                registerValue.makeBitHighAt(4);
-                registerValue.makeBitLowAt(3);
+                registerValue.setBit(4);
+                registerValue.clearBit(3);
                 break;
             case G_16:
                 // precondition met
-                registerValue.makeBitHighAt(4);
-                registerValue.makeBitHighAt(3);
+                registerValue.setBit(4);
+                registerValue.setBit(3);
                 break;
         }
         registerValue.store();
@@ -107,23 +107,23 @@ public class Mpu6050DeviceConfiguration {
             // All current non-AFS_SEL values need to be preserved so just modify the AFS_SEL bits
             case PLUS_MINUS_250:
                 // precondition met
-                registerValue.makeBitLowAt(4);
-                registerValue.makeBitLowAt(3);
+                registerValue.clearBit(4);
+                registerValue.clearBit(3);
                 break;
             case PLUS_MINUS_500:
                 // precondition met
-                registerValue.makeBitLowAt(4);
-                registerValue.makeBitHighAt(3);
+                registerValue.clearBit(4);
+                registerValue.setBit(3);
                 break;
             case PLUS_MINUS_1000:
                 // precondition met
-                registerValue.makeBitHighAt(4);
-                registerValue.makeBitLowAt(3);
+                registerValue.setBit(4);
+                registerValue.clearBit(3);
                 break;
             case PLUS_MINUS_2000:
                 // precondition met
-                registerValue.makeBitHighAt(4);
-                registerValue.makeBitHighAt(3);
+                registerValue.setBit(4);
+                registerValue.setBit(3);
                 break;
         }
         registerValue.store();
@@ -138,7 +138,7 @@ public class Mpu6050DeviceConfiguration {
 
         registerValue.setRegisterAddress(RegisterAddress.PWR_MNG_CONFIG);
         registerValue.load();
-        registerValue.makeBitLowAt(6);
+        registerValue.clearBit(6);
         registerValue.store();
     }
 
@@ -160,15 +160,15 @@ public class Mpu6050DeviceConfiguration {
 
             case DATA_RDY:
                 // precondition met
-                registerValue.makeBitHighAt(0);
+                registerValue.setBit(0);
                 break;
             case I2C_MST_INT:
                 // precondition met
-                registerValue.makeBitHighAt(3);
+                registerValue.setBit(3);
                 break;
             case FIFO_OFLOW:
                 // precondition met
-                registerValue.makeBitHighAt(4);
+                registerValue.setBit(4);
                 break;
         }
         registerValue.store();
@@ -193,15 +193,15 @@ public class Mpu6050DeviceConfiguration {
 
             case DATA_RDY:
                 // precondition met
-                registerValue.makeBitLowAt(0);
+                registerValue.clearBit(0);
                 break;
             case I2C_MST_INT:
                 // precondition met
-                registerValue.makeBitLowAt(3);
+                registerValue.clearBit(3);
                 break;
             case FIFO_OFLOW:
                 // precondition met
-                registerValue.makeBitLowAt(4);
+                registerValue.clearBit(4);
                 break;
         }
         registerValue.store();
