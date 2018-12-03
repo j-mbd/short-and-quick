@@ -1,4 +1,4 @@
-package jmbd.spi.mcp4901;
+package jmbd.spi.mcp49x1;
 
 /**
  *
@@ -19,5 +19,17 @@ public class Mcp4901SpiCommand extends Mcp49x1SpiCommand {
 
         // now merge that with configuration portion (beginning of value must fall right next to configuration)
         return getConfigurationValue() | data;
+    }
+
+    @Override
+    public int getMinDataValue() {
+
+        return 0;
+    }
+
+    @Override
+    public int getMaxDataValue() {
+        // data portion of register in 4901 is 1-byte so max value must be 255
+        return 255;
     }
 }

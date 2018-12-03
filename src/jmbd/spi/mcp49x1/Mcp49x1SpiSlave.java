@@ -1,6 +1,7 @@
-package jmbd.spi.mcp4901;
+package jmbd.spi.mcp49x1;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import jdk.dio.gpio.GPIOPin;
 import jdk.dio.gpio.GPIOPinConfig;
 import jdk.dio.spibus.SPIDevice;
@@ -14,8 +15,6 @@ public class Mcp49x1SpiSlave {
 
     protected SPIDevice device;
     protected GPIOPin csPin;
-
-    protected int wordSize;
 
     /**
      * REQUIRES:
@@ -36,11 +35,10 @@ public class Mcp49x1SpiSlave {
      * @param csPin
      * @param wordSize
      */
-    public Mcp49x1SpiSlave(SPIDevice device, GPIOPin csPin, int wordSize) {
+    public Mcp49x1SpiSlave(SPIDevice device, GPIOPin csPin) {
 
         setDevice(device);
         setCsPin(csPin);
-        setWordSize(wordSize);
     }
 
     public Mcp49x1SpiSlave() {
@@ -90,37 +88,21 @@ public class Mcp49x1SpiSlave {
     /**
      * REQUIRES:
      *
-     * (wordSize % 8) == 0
+     * 1) payload != null
      *
-     * ENSURES:
+     * 2) payload.remaining() == 2 (i.e. word length is 16-bits)
      *
-     * INTERNAL:
-     *
-     * buf.remaining() == wordSize
-     *
-     * @param wordSize
+     * @param payload
      */
-    public void setWordSize(int wordSize) {
+    public void accept(ByteBuffer payload) {
 
-        assert (wordSize % 8) == 0 : "word size not multiple of a byte";
+        assert payload != null : "payload is null";
 
-        this.wordSize = wordSize;
-    }
-
-    public int getWordSize() {
-
-        return wordSize;
-    }
-
-    /**
-     *
-     * @param data
-     */
-    public void store(int data) {
+        assert payload.remaining() == 2 : "Payload doesn't contain exactly two bytes to store";
 
         try {
             startDataTransfer();
-            device.write(data);
+            device.write(payload);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         } finally {

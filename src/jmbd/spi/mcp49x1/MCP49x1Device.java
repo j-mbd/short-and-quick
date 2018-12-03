@@ -1,7 +1,6 @@
-package jmbd.spi.mcp4901;
+package jmbd.spi.mcp49x1;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import javax.microedition.midlet.MIDletStateChangeException;
 import jdk.dio.Device;
 import jdk.dio.DeviceManager;
@@ -35,62 +34,44 @@ public class MCP49x1Device extends CommonOperationsMIDlet {
     private SPIDevice mcp4901Device;
     private GPIOPin csPin;
 
-    private Mcp49x1SpiSlave mcp49x1SpiSlave;
-    private ByteBuffer transferBuffer;
+    private Mcp49x1SpiCommand mcp49x1SpiCommand;
     private TimeDelay timeDelay;
 
     @Override
     protected void startApp() throws MIDletStateChangeException {
         try {
             mcp4901Device = mcp4901Device();
-            //csPin = outPin(CS_PIN_NUM);
-            transferBuffer = ByteBuffer.allocateDirect(MCP4901_WORD_LENGTH);
+            csPin = outPin(CS_PIN_NUM);
             timeDelay = new TimeDelay();
 
-            mcp49x1SpiSlave = new Mcp49x1SpiSlave(mcp4901Device, csPin, MCP4901_WORD_LENGTH);
+            mcp49x1SpiCommand = mcp4901SpiCommand();
 
-            for (int i = 0; i <= 255; i++) {
+            for (int d = mcp49x1SpiCommand.getMinDataValue(); d <= mcp49x1SpiCommand.getMaxDataValue(); d++) {
 
-                prepareBufferWith4901Value(i);
-                mcp49x1SpiSlave.store(i);
+                if (d >= mcp49x1SpiCommand.getMinDataValue() && d <= mcp49x1SpiCommand.getMaxDataValue()) {
+                    mcp49x1SpiCommand.setData(d);
+                    mcp49x1SpiCommand.store();
+                } else {
+                    System.out.println("data value \"" + d + "\" not within [" + mcp49x1SpiCommand.getMinDataValue() + " - " + mcp49x1SpiCommand.getMaxDataValue() + "] range. Will not be written to device");
+                }
 
-//                while (transferBuffer.hasRemaining()) {
-//                    System.out.println("command for value " + i + " is " + transferBuffer.getShort());
-//                }
                 timeDelay.pauseMillis(2_000);
-                System.out.println("--------------------------------------------------------");
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    /**
-     * REQUIRES:
-     *
-     * 1) val>=0 && val <= 255
-     *
-     * @param val
-     */
-    private void prepareBufferWith4901Value(int val) {
+    private Mcp4901SpiCommand mcp4901SpiCommand() {
 
-        assert val >= 0 && val <= 255 : "val not between [0 - 255] range";
+        Mcp4901SpiCommand cmd = new Mcp4901SpiCommand(new Mcp49x1SpiSlave(mcp4901Device, csPin));
 
-        transferBuffer.clear();
+        cmd.accepted();
+        cmd.unbuffered();
+        cmd.outputGainX1();
+        cmd.enabled();
 
-        // first four bits of the command are ignored so value should be shifted left
-        val <<= 4;
-
-        // now merge that with configuration portion (beginning of value must fall right next to configuration)
-        int completeCommand = MCP4901_CONFIGURATION_COMMAND | val;
-
-        // split in two bytes
-        byte msb = (byte) (completeCommand >> 8);
-        byte lsb = (byte) completeCommand;
-
-        transferBuffer.put(msb);
-        transferBuffer.put(lsb);
-        transferBuffer.flip();
+        return cmd;
     }
 
     private SPIDevice mcp4901Device() throws IOException {
