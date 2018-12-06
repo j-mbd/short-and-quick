@@ -17,19 +17,16 @@ import jmbd.commons.TimeDelay;
  */
 public class MCP49x1Device extends CommonOperationsMIDlet {
 
-    // Using configuration explicitly (but that's the device id in case we need it)
     private static final int SPI_DEVICE_ID = 300;
-    private static final int CS_PIN_NUM = 8;
+    private static final int CS_PIN_NUM = 17;
     private static final int LDAC_PIN_NUM = 18;
 
+    // Configuration values in case the device id is not used
     private static final int SPI_CONTROLLER_NUMBER = 0;
     private static final int SPI_CONTROLLER_ADDRESS = 0;
     private static final int MCP4901_CLOCK_FREQUENCY = 20_000_000;
     private static final int MCP4901_CLOCK_MODE = 0;
     private static final int MCP4901_WORD_LENGTH = 16;
-
-    // Default command configuration: write/unbuffered/1x-gain/active
-    private static final int MCP4901_CONFIGURATION_COMMAND = 0b0011000000000000;
 
     private SPIDevice mcp4901Device;
     private GPIOPin csPin;
@@ -46,15 +43,27 @@ public class MCP49x1Device extends CommonOperationsMIDlet {
 
             mcp49x1SpiCommand = mcp4901SpiCommand();
 
+            //  step-up to 5V
             for (int d = mcp49x1SpiCommand.getMinDataValue(); d <= mcp49x1SpiCommand.getMaxDataValue(); d++) {
-
                 if (d >= mcp49x1SpiCommand.getMinDataValue() && d <= mcp49x1SpiCommand.getMaxDataValue()) {
                     mcp49x1SpiCommand.setData(d);
-                    mcp49x1SpiCommand.store();
+                    mcp49x1SpiCommand.write();
+                    System.out.println("Data with value \"" + d + "\" written...");
                 } else {
                     System.out.println("data value \"" + d + "\" not within [" + mcp49x1SpiCommand.getMinDataValue() + " - " + mcp49x1SpiCommand.getMaxDataValue() + "] range. Will not be written to device");
                 }
+                timeDelay.pauseMillis(2_000);
+            }
 
+            // now step-down to 0V again..
+            for (int d = mcp49x1SpiCommand.getMaxDataValue(); d >= mcp49x1SpiCommand.getMinDataValue(); d--) {
+                if (d >= mcp49x1SpiCommand.getMinDataValue() && d <= mcp49x1SpiCommand.getMaxDataValue()) {
+                    mcp49x1SpiCommand.setData(d);
+                    mcp49x1SpiCommand.write();
+                    System.out.println("Data with value \"" + d + "\" written...");
+                } else {
+                    System.out.println("data value \"" + d + "\" not within [" + mcp49x1SpiCommand.getMinDataValue() + " - " + mcp49x1SpiCommand.getMaxDataValue() + "] range. Will not be written to device");
+                }
                 timeDelay.pauseMillis(2_000);
             }
         } catch (IOException ex) {
@@ -76,6 +85,7 @@ public class MCP49x1Device extends CommonOperationsMIDlet {
 
     private SPIDevice mcp4901Device() throws IOException {
 
+        // Not really using configuration (using id) by in case we need to...
         SPIDeviceConfig.Builder b = new SPIDeviceConfig.Builder();
         b.setClockFrequency(MCP4901_CLOCK_FREQUENCY);
         b.setClockMode(MCP4901_CLOCK_MODE);

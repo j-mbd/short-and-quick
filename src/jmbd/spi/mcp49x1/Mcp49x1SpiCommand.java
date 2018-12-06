@@ -1,11 +1,17 @@
 package jmbd.spi.mcp49x1;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
+ * Specific-version subclasses will have "x", in their name, replaced with the
+ * actual version number (Mcp4901SpiCommand)
+ *
  * INVARIANTS:
  *
- * getConfigurationValue() IN getConfigurationLegalValues()
+ * 1) getConfigurationValue() IN getConfigurationLegalValues()
+ *
+ * 2) getData() >= getMinDataValue() && getData() <= getMaxDataValue()
  *
  * @author savvas
  */
@@ -23,7 +29,13 @@ public abstract class Mcp49x1SpiCommand {
     public Mcp49x1SpiCommand(Mcp49x1SpiSlave mcp49x1SpiSlave) {
 
         this.mcp49x1SpiSlave = mcp49x1SpiSlave;
+        // always a two-byte command
         buffer = ByteBuffer.allocateDirect(2);
+    }
+
+    public int[] getConfigurationLegalValues() {
+
+        return Arrays.copyOf(CONFIGURATION_LEGAL_VALUES, CONFIGURATION_LEGAL_VALUES.length);
     }
 
     public int getConfigurationValue() {
@@ -55,7 +67,14 @@ public abstract class Mcp49x1SpiCommand {
         this.mcp49x1SpiSlave = mcp49x1SpiSlave;
     }
 
-    public void store() {
+    /**
+     * ENSURES:
+     *
+     * INTERNAL:
+     *
+     * buffer.remaining() == 2
+     */
+    public void write() {
 
         try {
             int merged = mergedCommand();
@@ -73,7 +92,10 @@ public abstract class Mcp49x1SpiCommand {
                 System.out.println("Buffer not primed properly..command not sent!");
             }
         } finally {
+
             buffer.clear();
+
+            assert buffer.remaining() == 2 : "Buffer not prepeared for next write";
         }
     }
 
@@ -102,7 +124,11 @@ public abstract class Mcp49x1SpiCommand {
      */
     public abstract int getMaxDataValue();
 
-    //********************************* CONFIGURATION *********************************
+    //**********************************************************************************
+    //**********************************************************************************
+    //********************************** CONFIGURATION *********************************
+    //**********************************************************************************
+    //**********************************************************************************
     /**
      * Configuration: The device will accept this command.
      */
@@ -124,7 +150,7 @@ public abstract class Mcp49x1SpiCommand {
     }
 
     /**
-     * Configuration: V-ref Input Buffered
+     * Configuration: V-ref Input Buffered.
      */
     public void buffered() {
 
@@ -134,7 +160,7 @@ public abstract class Mcp49x1SpiCommand {
     }
 
     /**
-     * Configuration: V-ref Input Unbuffered
+     * Configuration: V-ref Input Unbuffered.
      */
     public void unbuffered() {
 
@@ -144,7 +170,7 @@ public abstract class Mcp49x1SpiCommand {
     }
 
     /**
-     * Configuration: 1x Output Gain
+     * Configuration: 1x Output Gain.
      */
     public void outputGainX1() {
 
@@ -154,7 +180,7 @@ public abstract class Mcp49x1SpiCommand {
     }
 
     /**
-     * Configuration: 2x Output Gain
+     * Configuration: 2x Output Gain.
      */
     public void outputGainX2() {
 
@@ -164,7 +190,7 @@ public abstract class Mcp49x1SpiCommand {
     }
 
     /**
-     * Configuration: Vout is available
+     * Configuration: Vout is available.
      */
     public void enabled() {
 
@@ -174,7 +200,7 @@ public abstract class Mcp49x1SpiCommand {
     }
 
     /**
-     * Configuration: Vout is not available
+     * Configuration: Vout is not available.
      */
     public void disabled() {
 

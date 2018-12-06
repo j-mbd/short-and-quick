@@ -33,15 +33,12 @@ public class Mcp49x1SpiSlave {
      *
      * @param device
      * @param csPin
-     * @param wordSize
      */
     public Mcp49x1SpiSlave(SPIDevice device, GPIOPin csPin) {
 
+        // pre-conditions applied on each method
         setDevice(device);
         setCsPin(csPin);
-    }
-
-    public Mcp49x1SpiSlave() {
     }
 
     /**
@@ -97,47 +94,45 @@ public class Mcp49x1SpiSlave {
     public void accept(ByteBuffer payload) {
 
         assert payload != null : "payload is null";
-
         assert payload.remaining() == 2 : "Payload doesn't contain exactly two bytes to store";
 
         try {
-            startDataTransfer();
+            prepareForWrite();
             device.write(payload);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         } finally {
-            stopDataTransfer();
+            // let's "high" CS pin in case of exception too since that would leave the device in a consistent state (i.e. non-write mode)
+            updateVout();
         }
     }
 
-    protected void startDataTransfer() {
+    protected void prepareForWrite() {
 
         try {
-            // The CS pin must be held low for the duration of a write command.
+            // The CS pin must be held low for the entire duration of a write.
             csPin.setValue(false);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    protected void stopDataTransfer() {
+    protected void updateVout() {
 
         try {
+            // latch-out Vout..CS pin high
             csPin.setValue(true);
-            flush();
+            additionalFlush();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     /**
-     * Moves input-register data to output-register (analog-out pin).
-     *
-     * (NOP in this version, subclasses may redefine to take into account usage
-     * of LDAC pin)
-     *
+     * NOP in this version, subclasses can override to take into account usage
+     * of LDAC pin.
      */
-    protected void flush() {
+    protected void additionalFlush() {
         // NOP
     }
 }
