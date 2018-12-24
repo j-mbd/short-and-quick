@@ -23,6 +23,8 @@ import jmbd.commons.TimeDelay;
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
+ * Tested by connecting Vout both to a multimeter and a LED and stepping up &
+ * down the legal values 4901 supports..
  *
  * @author savvas
  */
@@ -31,6 +33,7 @@ public class MCP49x1Device extends CommonOperationsMIDlet {
     private static final int SPI_DEVICE_ID = 300;
     private static final int CS_PIN_NUM = 17;
     private static final int LDAC_PIN_NUM = 18;
+    private static final int LOCK_TIMEOUT_MILLIS = 3_000;
 
     // Configuration values in case the device id is not used
     private static final int SPI_CONTROLLER_NUMBER = 0;
@@ -49,6 +52,7 @@ public class MCP49x1Device extends CommonOperationsMIDlet {
     protected void startApp() throws MIDletStateChangeException {
         try {
             mcp4901Device = mcp4901Device();
+            mcp4901Device.tryLock(LOCK_TIMEOUT_MILLIS);
             csPin = outPin(CS_PIN_NUM);
             timeDelay = new TimeDelay();
 

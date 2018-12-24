@@ -17,7 +17,7 @@ import java.util.Arrays;
  *
  *
  * Specific-version subclasses will have "x", in their name, replaced with the
- * actual version number (Mcp4901SpiCommand)
+ * actual version number (i.e. Mcp4901SpiCommand)
  *
  * INVARIANTS:
  *
@@ -80,6 +80,8 @@ public abstract class Mcp49x1SpiCommand {
     }
 
     /**
+     * Send the complete merged command (i.e. configuration + data) to device.
+     *
      * ENSURES:
      *
      * INTERNAL:
@@ -226,15 +228,21 @@ public abstract class Mcp49x1SpiCommand {
      *
      * index >= 12 && index <= 15
      *
+     * ENSURES:
+     *
+     * getConfigurationValue() == (oldValue & (~(1 << index)));
+     *
      * @param index
      */
     protected void clearConfigurationBit(int index) {
 
-        assert (index >= 12 && index <= 15) : "index [" + index + "] is not within [12 - 15] range";
+        int oldValue = configurationValue;
+
+        assert indexInRange(index) : "index [" + index + "] is not within [12 - 15] range";
 
         configurationValue &= ~(1 << index);
 
-        assert confValueLegal() : "Current configuration value not in legal-values range";
+        assert getConfigurationValue() == (oldValue & (~(1 << index)));
     }
 
     /**
@@ -242,15 +250,25 @@ public abstract class Mcp49x1SpiCommand {
      *
      * index >= 12 && index <= 15
      *
+     * ENSURES:
+     *
+     * getConfigurationValue() == (oldValue | (~(1 << index)));
+     *
      * @param index
      */
     protected void setConfigurationBit(int index) {
 
-        assert (index >= 12 && index <= 15) : "index [" + index + "] is not within [12 - 15] range";
+        int oldValue = configurationValue;
+        assert indexInRange(index) : "index [" + index + "] is not within [12 - 15] range";
 
         configurationValue |= (1 << index);
 
-        assert confValueLegal() : "Current configuration value not in legal-values range";
+        assert getConfigurationValue() == (oldValue & (~(1 << index)));
+    }
+
+    protected boolean indexInRange(int index) {
+
+        return (index >= 12 && index <= 15);
     }
 
     private boolean confValueLegal() {
